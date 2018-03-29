@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.control.autoTestManage.dao.AutoTestMapper">
+  <cache/>
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.control.autoTestManage.entity.AutoTest">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="TEST_NAME" jdbcType="VARCHAR" property="testName" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="REQUEST_URL" jdbcType="VARCHAR" property="requestUrl" />
+    <result column="RESPOSE_URL" jdbcType="VARCHAR" property="resposeUrl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, TEST_NAME, CREATE_USER, CREATE_TIME, REQUEST_URL, RESPOSE_URL
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_AUTO_TEST
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TASK_AUTO_TEST
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.control.autoTestManage.entity.AutoTest">
+    insert into TASK_AUTO_TEST (ID, TEST_NAME, CREATE_USER, 
+      CREATE_TIME, REQUEST_URL, RESPOSE_URL
+      )
+    values (#{id,jdbcType=VARCHAR}, #{testName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR}, #{requestUrl,jdbcType=VARCHAR}, #{resposeUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.control.autoTestManage.entity.AutoTest">
+    insert into TASK_AUTO_TEST
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="testName != null">
+        TEST_NAME,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="requestUrl != null">
+        REQUEST_URL,
+      </if>
+      <if test="resposeUrl != null">
+        RESPOSE_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="testName != null">
+        #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUrl != null">
+        #{requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resposeUrl != null">
+        #{resposeUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.control.autoTestManage.entity.AutoTest">
+    update TASK_AUTO_TEST
+    <set>
+      <if test="testName != null">
+        TEST_NAME = #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUrl != null">
+        REQUEST_URL = #{requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resposeUrl != null">
+        RESPOSE_URL = #{resposeUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.control.autoTestManage.entity.AutoTest">
+    update TASK_AUTO_TEST
+    set TEST_NAME = #{testName,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      REQUEST_URL = #{requestUrl,jdbcType=VARCHAR},
+      RESPOSE_URL = #{resposeUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+<!-- 查询所有数据 -->
+ <select id="selectPro"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_AUTO_TEST order by CREATE_TIME desc
+  </select>
+  
+  <select id="getAutoTestById" parameterType="java.lang.String" resultType="java.util.Map">
+  select tat.autotest_id, tat.test_name, tat.deploy_id,tat.test_type
+  from task_auto_test tat
+ where tat.id = #{autoTestId,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.control.projectManage.dao.ProjectManageMapper">
+  <cache/>
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.control.projectManage.entity.ProjectManage">
+    <id column="PROJECT_ID" jdbcType="VARCHAR" property="projectId" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+    <result column="PROJECT_DESCRIBE" jdbcType="VARCHAR" property="projectDescribe" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="PROJECT_STATUS" jdbcType="VARCHAR" property="projectStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PROJECT_ID, PROJECT_NAME, PROJECT_DESCRIBE, CREATE_USER, CREATE_TIME, PROJECT_STATUS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from PROJECT_INFO
+    where PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PROJECT_INFO
+    where PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.control.projectManage.entity.ProjectManage">
+    insert into PROJECT_INFO (PROJECT_ID, PROJECT_NAME, PROJECT_DESCRIBE, 
+      CREATE_USER, CREATE_TIME, PROJECT_STATUS
+      )
+    values (#{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{projectDescribe,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{projectStatus,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.control.projectManage.entity.ProjectManage">
+    insert into PROJECT_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        PROJECT_ID,
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME,
+      </if>
+      <if test="projectDescribe != null">
+        PROJECT_DESCRIBE,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="projectStatus != null">
+        PROJECT_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDescribe != null">
+        #{projectDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="projectStatus != null">
+        #{projectStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.control.projectManage.entity.ProjectManage">
+    update PROJECT_INFO
+    <set>
+      <if test="projectName != null">
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDescribe != null">
+        PROJECT_DESCRIBE = #{projectDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="projectStatus != null">
+        PROJECT_STATUS = #{projectStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.control.projectManage.entity.ProjectManage">
+    update PROJECT_INFO
+    set PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      PROJECT_DESCRIBE = #{projectDescribe,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      PROJECT_STATUS = #{projectStatus,jdbcType=VARCHAR}
+    where PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询项目列表 -->
+  <select id="queryProjectList" parameterType="java.util.Map" resultType="java.util.Map">
+   select 
+    <include refid="Base_Column_List" />
+    from PROJECT_INFO
+ </select>
+
+  <!-- 查询项目id -->
+<select id="selectByBeanClass" parameterType="com.ultrapower.ci.control.projectManage.entity.ProjectManage" resultMap="BaseResultMap">
+   select 
+   <include refid="Base_Column_List" />
+    from PROJECT_INFO where PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+ </select>
+
+<!-- 通过项目名查询项目是否以存在-->
+<select id="selectByname" resultMap="BaseResultMap">
+  select 
+    <include refid="Base_Column_List" />
+    from PROJECT_INFO
+ </select>
+
+<select id="selectNumber" resultType="java.lang.String">
+select count(*) from PROJECT_INFO
+</select>
+
+<select id="selectPro" resultMap="BaseResultMap">
+ select 
+    <include refid="Base_Column_List" />
+    from PROJECT_INFO order by  CREATE_TIME desc
+</select>
+<select id="selectToId" resultMap="BaseResultMap" parameterType="java.lang.String">
+ select 
+    <include refid="Base_Column_List" />
+    from PROJECT_INFO where PROJECT_ID= #{projectId,jdbcType=VARCHAR}
+</select>
+
+<select id="selectPidByProjectId" resultType="java.lang.String" parameterType="java.lang.String">
+ select id 
+ from pipelining_info where PROJECT_ID= #{projectId,jdbcType=VARCHAR}
+</select>
+</mapper>

@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.control.taskManage.dao.TaskManageMapper">
+<cache/>
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.control.taskManage.entity.TaskManage">
+    <id column="TASK_ID" jdbcType="VARCHAR" property="taskId" />
+    <result column="RELATION_ID" jdbcType="VARCHAR" property="relationId" />
+    <result column="TASK_TYPE" jdbcType="VARCHAR" property="taskType" />
+    <result column="PARENT_TASK_ID" jdbcType="VARCHAR" property="parentTaskId" />
+    <result column="TASK_SORT" jdbcType="VARCHAR" property="taskSort" />
+    <result column="TASK_STATUS" jdbcType="VARCHAR" property="taskStatus" />
+    <result column="REMARKS" jdbcType="VARCHAR" property="remarks" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TASK_ID, RELATION_ID, TASK_TYPE, PARENT_TASK_ID, TASK_SORT, TASK_STATUS, REMARKS, 
+    CREATE_USER, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_TABLE
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TASK_TABLE
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.control.taskManage.entity.TaskManage">
+    insert into TASK_TABLE (TASK_ID, RELATION_ID, TASK_TYPE, 
+      PARENT_TASK_ID, TASK_SORT, TASK_STATUS, 
+      REMARKS, CREATE_USER, CREATE_TIME
+      )
+    values (#{taskId,jdbcType=VARCHAR}, #{relationId,jdbcType=VARCHAR}, #{taskType,jdbcType=VARCHAR}, 
+      #{parentTaskId,jdbcType=VARCHAR}, #{taskSort,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.control.taskManage.entity.TaskManage">
+    insert into TASK_TABLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        TASK_ID,
+      </if>
+      <if test="relationId != null">
+        RELATION_ID,
+      </if>
+      <if test="taskType != null">
+        TASK_TYPE,
+      </if>
+      <if test="parentTaskId != null">
+        PARENT_TASK_ID,
+      </if>
+      <if test="taskSort != null">
+        TASK_SORT,
+      </if>
+      <if test="taskStatus != null">
+        TASK_STATUS,
+      </if>
+      <if test="remarks != null">
+        REMARKS,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="relationId != null">
+        #{relationId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentTaskId != null">
+        #{parentTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskSort != null">
+        #{taskSort,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.control.taskManage.entity.TaskManage">
+    update TASK_TABLE
+    <set>
+      <if test="relationId != null">
+        RELATION_ID = #{relationId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        TASK_TYPE = #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentTaskId != null">
+        PARENT_TASK_ID = #{parentTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskSort != null">
+        TASK_SORT = #{taskSort,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.control.taskManage.entity.TaskManage">
+    update TASK_TABLE
+    set RELATION_ID = #{relationId,jdbcType=VARCHAR},
+      TASK_TYPE = #{taskType,jdbcType=VARCHAR},
+      PARENT_TASK_ID = #{parentTaskId,jdbcType=VARCHAR},
+      TASK_SORT = #{taskSort,jdbcType=VARCHAR},
+      TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR}
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </update>
+
+	<!--add by tangyongchun @2017-12-07 插入流水线历史记录 -->
+	<insert id="insertPipHistory" parameterType="java.util.Map">
+		insert into
+		build_history(id,pip_id,build_start_time,build_user,pip_version)
+		values(#{id},#{pipId},#{buildStartTime},#{buildUser},#{pipVersion})
+	</insert>
+	
+	<!--add by tangyongchun @2017-12-07 更新流水线历史记录 -->
+	<update id="updatePipHistory" parameterType="java.util.Map">
+		update build_history
+		set build_end_time = #{buildEndTime},build_status =
+		#{buildStatus},build_total_time = (select sum(h.build_total_time) as totalTime from build_history h where h.task_version is not null and h.pip_id =#{pipId} and h.pip_version=#{pipVersion})
+		where task_version
+		is null and pip_version = #{pipVersion} and pip_id=#{pipId}
+	</update>
+
+	<!--add by tangyongchun @2017-12-07 新增构建job历史记录 -->
+	<insert id="insertJobHistory" parameterType="java.util.Map">
+		insert into
+		build_history(id,pip_id,pip_steps_task_id,build_start_time,build_end_time,build_status,build_user,build_total_time,pip_version,task_version,apply_url)
+		values(#{id},#{pipId},#{pipStepTaskId},#{buildStartTime},#{buildEndTime},#{buildStatus},#{buildUser},#{buildTotalTime},#{pipVersion},#{taskVersion},#{applyUrl})
+	</insert>
+
+	<!--add by tangyongchun @2017-12-08 查询单个job历史记录 -->
+	<select id="getSingleJobHistory" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		bh.id,bh.pip_id,bh.pip_steps_task_id,bh.build_start_time,bh.build_end_time,bh.build_status,bh.build_user,bh.build_total_time,bh.pip_version,bh.task_version
+		from build_history bh where bh.pip_steps_task_id=#{pipStepTaskId} and
+		bh.pip_version=#{pipVersion}
+	</select>
+
+	<!--add by tangyongchun @2017-12-08 修改单个job历史记录 -->
+	<update id="updateSingleJobHistory" parameterType="java.util.Map">
+		update
+		build_history bh set bh.id=#{id},
+		bh.pip_id=#{pipId},bh.pip_steps_task_id=#{pipStepTaskId},bh.build_start_time=#{buildStartTime},bh.build_end_time=#{buildEndTime},bh.build_status=#{buildStatus},bh.build_user=#{buildUser},bh.build_total_time=#{buildTotalTime},bh.pip_version=#{pipVersion},bh.task_version=#{taskVersion},bh.apply_url=#{applyUrl}
+		where bh.pip_steps_task_id=#{pipStepTaskId} and
+		bh.pip_version=#{pipVersion}
+	</update>
+
+	<!--add by tangyongchun @2017-12-08 查询构建job时处于失败状态的 -->
+	<select id="getBuildJobFailure" parameterType="java.util.Map" resultType="java.util.Map">
+		select stepscount,buildcount from (select count(s.id) as
+		stepscount from pipelining_steps s where s.pip_id = #{pipId}) steps,
+		(select count(h.id) as buildcount from build_history h where
+		h.task_version is not null and h.pip_id = #{pipId} and h.pip_version=
+		#{pipVersion} and h.build_status = '2') history
+	</select>
+
+	<!-- add by tangyongchun @2017-12-20 更新自动化测试历史记录信息 -->
+	<update id="updateAutoTestHistory" parameterType="java.util.Map">
+		update
+		build_history h set
+		h.build_end_time=#{buildEndTime,jdbcType=VARCHAR},h.build_status=#{buildStatus,jdbcType=VARCHAR},h.build_total_time=#{buildTotalTime,jdbcType=VARCHAR},h.task_version=#{taskVersion,jdbcType=VARCHAR},h.apply_url=#{applyUrl,jdbcType=VARCHAR}
+		where h.id=#{id,jdbcType=VARCHAR}
+	</update>
+
+	<!-- add by tangyngchun @2017-12-20 查询自动化测试历史记录 -->
+	<select id="getAutoTestHistory" parameterType="java.util.Map" resultType="java.util.Map">
+		select h.build_status, h.build_total_time, h.task_version, h.apply_url, h.build_end_time
+		from build_history h where h.build_status is not null and
+		h.pip_task_id =#{pipTaskId} and h.pip_version =#{pipVersion}
+	</select>
+
+	<!-- add by tangyongchun @2017-12-21 清空自动化测试状态 -->
+	<update id="cleanAutoTestByStatus" parameterType="java.util.Map">
+		update
+		build_history h set h.build_status='' where
+		h.pip_steps_task_id=#{pipStepTaskId} and h.pip_version=#{pipVersion}
+	</update>
+
+	<!-- add by tangyongchun @2017-12-21 根据任务id查询部署后的应用url -->
+	<select id="getDeployHistroyByUrl" parameterType="java.util.Map" resultType="java.util.Map">
+		select n.node_ip,n.node_port,t.autotest_id from task_auto_test t, task_deploy d, node_info n
+		where t.deploy_id = d.id and d.node_id = n.id and t.id =#{taskId}
+	</select>
+	
+	<!-- 查询指定流水线历史版本中部署任务关联的节点IP和端口 -->
+	<select id="getDeployIpAndPortByUrl" parameterType="java.util.Map" resultType="java.util.Map">
+		select ni.node_ip, ni.node_port
+		  from node_info ni
+		  left join build_history bh
+		    on ni.history_id = bh.id
+		  left join pipelining_steps_task pst
+		    on pst.id = bh.pip_steps_task_id
+		 where bh.pip_id = #{pipId,jdbcType=VARCHAR}
+		   and bh.pip_version = #{pipVersion,jdbcType=VARCHAR}
+		   and pst.task_type = #{taskType,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- add by tangyongchun @2017-12-22 根据流水线id及版本号查询流水线相关历史记录 -->
+	<select id="getPipliningListInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		h.build_start_time,h.build_end_time,h.build_status,h.build_total_time,h.apply_url,st.task_type,b.build_name
+		from build_history h left join pipelining_steps_task st on
+		h.pip_steps_task_id = st.id left join task_build b on st.task_id=b.id
+		where h.pip_id = #{pipId} and h.pip_version = #{pipVersion}
+	</select>
+	
+	<!-- add by tangyongchun @2018-01-29 查询自动化测试历史开始时间 -->
+	<select id="getAutoTestById" parameterType="java.util.Map" resultType="java.util.Map">
+		select h.build_start_time from build_history h where h.id=#{id,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- add by tangyongchun @2018-02-02 根据流水线id查询流水线的结束时间、耗时、邮件地址 -->
+	<select id="getPiplineById" parameterType="java.util.Map" resultType="java.util.Map">
+		select i.mail_address,h.build_end_time,h.build_total_time
+		from pipelining_info i, build_history h
+		where i.id = h.pip_id and h.pip_steps_task_id is null
+		and i.id =#{pipId} and h.pip_version=#{pipVersion}
+	</select>
+	
+  <!-- mxx新建流水线 sql -->
+  <!-- 流水线表 -->
+  <insert id="insertPip" parameterType="Map">
+      insert into PIPELINING_INFO (ID, PIP_NAME, CREATE_TIME, CREATE_USER, PROJECT_ID,EXECUTION_MODE ,TIMED_CRON, MAIL_ADDRESS
+      )
+    values (#{id,jdbcType=VARCHAR}, #{pip_name,jdbcType=VARCHAR}, #{pip_create_time,jdbcType=VARCHAR},
+     #{pip_create_user,jdbcType=VARCHAR}, #{project_id,jdbcType=VARCHAR},#{executionMode,jdbcType=VARCHAR},#{cron,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
+      )
+  </insert>
+  <!-- 根据task_id删除现有的参数 -->
+	<delete id="deleteTaskParameter" parameterType="java.lang.String">
+    delete from task_parameter t where t.task_id = #{taskDeployId,jdbcType=VARCHAR}
+    </delete>  
+ <!-- 任务参数配置表 -->
+  <insert id="insertTaskParameter" parameterType="java.util.List">
+  	 insert into task_parameter (ID, TASK_ID, TASK_TYPE, PARAM_NAME, PARAM_TYPE,PARAM_DEFAULT,PARAM_DESCRIBE,PARAM_SORT)
+   	 <foreach collection="list" item="item" index="index"  open="(" separator="union" close=")">
+            select                                                                 
+	            #{item.id,jdbcType=VARCHAR}, 
+	            #{item.task_id,jdbcType=VARCHAR},
+	            #{item.task_type,jdbcType=VARCHAR},
+	            #{item.param_name,jdbcType=VARCHAR},
+	            #{item.param_type,jdbcType=VARCHAR},
+	            #{item.param_default,jdbcType=VARCHAR},
+	            #{item.param_describe,jdbcType=VARCHAR}, 
+	            #{item.param_sort,jdbcType=VARCHAR}
+            from dual
+      </foreach >
+  </insert>
+  <!-- 流水线任务关联表 -->
+  <insert id="insertPipStepsTask" parameterType="Map">
+  	 insert into pipelining_task (ID, PIP_ID,TASK_ID, TASK_TYPE, SORT
+      )
+    values (#{pipStepTaskId,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{taskID,jdbcType=VARCHAR},
+     #{pip_steps_sort,jdbcType=VARCHAR}, #{pip_steps_sort,jdbcType=VARCHAR}
+      )
+  </insert>
+  <!-- 代码仓库表 -->
+  <insert id="insertCodeRep" parameterType="Map">
+  	 insert into CODE_REPOSITORIES (ID, REP_NAME, REP_DESCRIBE, REP_URL,REP_VERSION,REP_ACCOUNT_NUMBER,REP_PASSWORD
+      )
+    values (#{repId,jdbcType=VARCHAR}, #{repName,jdbcType=VARCHAR}, #{repDes,jdbcType=VARCHAR},
+     #{svn_url,jdbcType=VARCHAR}, #{repVersion,jdbcType=VARCHAR}, #{repAccount,jdbcType=VARCHAR},
+     #{repPassword,jdbcType=VARCHAR}
+      )
+  </insert>
+   <!-- 构建任务表 -->
+  <insert id="insertTaskBuild" parameterType="Map">
+  	 insert into TASK_BUILD (ID, BUILD_NAME, BUILD_ENVIRONMENT, BUILD_TYPE,CODE_REP_ID,CREATE_USER,CREATE_TIME,REAL_BUILD_NAME
+      )
+    values (#{taskBuildId,jdbcType=VARCHAR}, #{real_build_name,jdbcType=VARCHAR}, #{build_environment,jdbcType=VARCHAR},
+     #{build_type,jdbcType=VARCHAR}, #{repId,jdbcType=VARCHAR}, #{pip_create_user,jdbcType=VARCHAR},
+     #{pip_create_time,jdbcType=VARCHAR}, #{build_name,jdbcType=VARCHAR}
+      )
+  </insert>
+   <!-- 部署任务表 -->
+  <insert id="insertTaskDeploy" parameterType="Map">
+  	 insert into TASK_DEPLOY (ID, DEPLOY_NAME, CREATE_USER, CREATE_TIME, MOULD_ID ,REAL_DEPLOY_NAME,BUILD_ID,BUILD_MODE
+      )
+    values (#{taskDeployId,jdbcType=VARCHAR}, #{real_deploy_name,jdbcType=VARCHAR}, #{pip_create_user,jdbcType=VARCHAR},
+     #{pip_create_time,jdbcType=VARCHAR}, #{mould_id,jdbcType=VARCHAR}, #{deploy_name,jdbcType=VARCHAR},
+     #{taskBuildId,jdbcType=VARCHAR}, #{build_mode,jdbcType=VARCHAR}
+      )
+  </insert>
+   <!-- 节点表 -->
+  <insert id="insertNodeInfo" parameterType="Map">
+  	 insert into NODE_INFO (ID, NODE_IP, NODE_PORT, NODE_ACCOUNT_NUMBER, NODE_PASSWORD , HISTORY_ID, APP_ID
+      )
+    values ( #{nodeInfoId,jdbcType=VARCHAR}, #{tomcat_ip,jdbcType=VARCHAR}, #{tomcat_port,jdbcType=VARCHAR},
+     #{tomcat_account,jdbcType=VARCHAR}, #{tomcat_password,jdbcType=VARCHAR}, #{historyId,jdbcType=VARCHAR},
+     #{appId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <!-- 自动化测试表 -->
+  <insert id="insertTaskAuto" parameterType="Map">
+  	 insert into task_auto_test (ID,AUTOTEST_ID, TEST_NAME, CREATE_USER, CREATE_TIME, REQUEST_URL , RESPOSE_URL,DEPLOY_ID,TEST_TYPE
+      )
+    values ( #{taskAutoId,jdbcType=VARCHAR}, #{automatedtaskId,jdbcType=VARCHAR}, #{automatedtaskName,jdbcType=VARCHAR}, #{pip_create_user,jdbcType=VARCHAR},
+     #{pip_create_time,jdbcType=VARCHAR}, #{requestUrl,jdbcType=VARCHAR}, #{resposeUrl,jdbcType=VARCHAR},#{taskDeployId,jdbcType=VARCHAR},
+     #{automatedtaskType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <!-- 节点表修改 ip port -->
+  	 <update id="updateNodeInfo" parameterType="java.util.Map">
+		update node_info
+		set node_ip = #{tomcat_ip,jdbcType=VARCHAR},node_port = #{tomcat_port,jdbcType=VARCHAR}
+		 where  id = (select node_id from TASK_DEPLOY where id = #{id,jdbcType=VARCHAR})
+  </update>
+  <!-- 清空节点表 ip port -->
+  	 <update id="emptyNodeInfo" parameterType="java.lang.String">
+		update node_info
+		set node_ip = '',node_port = ''
+		 where  id = (select node_id from TASK_DEPLOY where id = #{taskId,jdbcType=VARCHAR})
+  </update>
+  <!-- 查询部署任务的名称(根据部署任务id) -->
+  <select id="queryDeployName" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select deploy_name from TASK_DEPLOY where
+	ID = #{jobId,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询部署任务的REAL名称(根据部署任务id) -->
+  <select id="queryRealDeployName" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select real_deploy_name from TASK_DEPLOY where
+	ID = #{jobId,jdbcType=VARCHAR}
+  </select>
+    <!-- 查询构建任务的名称(根据部署任务id) -->
+  <select id="queryBuildName" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select build_name from TASK_BUILD where
+	ID = (select build_id from TASK_DEPLOY where id = #{jobId,jdbcType=VARCHAR} )
+  </select>
+  <!-- 查询节点id即tomcat唯一标识 -->
+  <select id="queryNodeId" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select node_id from TASK_DEPLOY where
+	ID = #{jobId,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询tomcat账号 -->
+  <select id="queryTomcatAccount" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select node_account_number from node_info where
+	ID = (select node_id from TASK_DEPLOY where id = #{jobId,jdbcType=VARCHAR})
+  </select>
+  <!-- 查询tomcat密码 -->
+  <select id="queryTomcatPassword" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select node_password  from node_info where
+	ID = (select node_id from TASK_DEPLOY where id = #{jobId,jdbcType=VARCHAR})
+  </select>
+  <!-- 查询email -->
+  <select id="queryEmail" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select mail_address  from PIPELINING_INFO where
+	id = (select pip_id from pipelining_steps where id = 
+	(select pip_steps_id from pipelining_steps_task where task_id = #{jobId,jdbcType=VARCHAR} ) and pip_steps_name = 'step2')
+  </select>
+   <!-- 查询tomcat账号，密码-->
+  <select id="queryTomcatInfo2" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select node_account_number, node_password  from node_info where
+	ID = (select node_id from TASK_DEPLOY where id = #{jobId,jdbcType=VARCHAR})
+  </select>
+  <!-- mxx新建流水线 sql end -->
+  <!-- mxx新建流水线组相关 sql -->
+   <select id="queryPipList" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	select * from 
+	(
+	select A.*, ROWNUM RN
+          from (select distinct p.id,
+                                p.pip_name,
+                                p.create_user,
+                                p.create_time,
+							    b.build_start_time,
+							    b.build_status
+                  from pipelining_info p
+                 inner join pipelining_task q on q.task_type != '0'
+                                             and p.id = q.pip_id
+                  left join build_history b on (b.pip_id, b.build_start_time) in
+                                               (select pip_id,
+                                                       max(build_start_time)
+                                                  from build_history b
+                                                 group by pip_id)
+                                           and p.id = b.pip_id
+                 order by p.create_time DESC) A
+	WHERE ROWNUM &lt;= #{j} 
+	)
+	WHERE RN &gt;= #{i} 
+  </select>
+  <select id="queryPipCount" parameterType="java.util.Map"
+	resultType="int">
+	select count(*) from 
+	(
+	select distinct  p.id,
+       p.pip_name,
+       p.create_user,
+       p.create_time,
+       b.build_start_time,
+       b.build_status
+  from pipelining_info p
+  inner join pipelining_task q on  
+   q.task_type  != '0'  and p.id = q.pip_id
+  left join build_history b on (b.pip_id, b.build_start_time) in
+                               (select pip_id, max(build_start_time)
+                                  from build_history b
+                                 group by pip_id)
+                           and p.id = b.pip_id
+	)
+  </select>
+  <select id="queryPipInfo" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	select * from 
+	(
+	select distinct p.id,p.pip_name, p.create_user, p.create_time, b.build_start_time, b.build_status
+	 from pipelining_info p left join build_history b on (pip_id,build_start_time) in
+	(select pip_id, max(build_start_time) from build_history b group by pip_id) and p.id = b.pip_id
+	) where  id = #{id}
+  </select>
+  <!-- mxx新建流水线组相关 sql end -->
+  <!-- mxx修改流水线 sql -->
+  <select id="queryPipName" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select PIP_NAME, MAIL_ADDRESS,EXECUTION_MODE,TIMED_CRON from PIPELINING_INFO where
+	ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询部署任务信息 -->
+  <select id="queryDeployTaskInfo" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select MOULD_ID
+	  from TASK_DEPLOY
+	 where ID = (select task_id
+	               from pipelining_task
+	              where pip_id = #{id,jdbcType=VARCHAR}
+	                and task_type = '2')
+  </select>
+    <!-- 获取svn账号密码 -->
+  <select id="querySvnInfo" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select c.rep_url, c.rep_account_number, c.rep_password
+	  from CODE_REPOSITORIES c
+	 where id = (select code_rep_id
+	               from task_build
+	              where id = (select task_id
+	                            from pipelining_task
+	                           where pip_id = #{id,jdbcType=VARCHAR}
+	                             and task_type = '1'))
+  </select>
+ 	 <!-- 获取tomcat账号密码 -->
+  <select id="queryTomcatInfo" parameterType="java.lang.String"
+	resultType="java.util.Map">
+    select n.node_account_number, n.node_password
+	  from node_info n
+	 where id = (select t.node_id
+	               from TASK_DEPLOY t
+	              where t.id = (select task_id
+	               from pipelining_task
+	              where pip_id = #{id,jdbcType=VARCHAR}
+	                and task_type = '2'))
+  </select>
+  	 <!-- 获取构建环境及类型 -->
+  <select id="querytaskInfo" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select d.dic_id, t.build_environment, t.build_type
+	  from task_build t, s_dic d
+	 where id = (select task_id
+	               from pipelining_task
+	              where pip_id = #{id,jdbcType=VARCHAR}
+	                and task_type = '1')
+	   and d.dic_code = t.build_environment
+  </select>
+    <!-- 查询单流水线参数信息 -->
+  <select id="queryparamInfo" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select *
+	from task_parameter a
+	where a.task_id = (select p.task_id
+	from
+	pipelining_task p
+	where p.pip_id = #{id,jdbcType=VARCHAR}
+	and p.task_type
+	= '2') ORDER BY a.param_sort asc
+  </select>
+  <!-- mxx修改流水线 sql end -->
+  <!-- mxx修改流水线信息 sql start -->
+  <!-- 修改流水线表 -->
+  <update id="updatePip" parameterType="java.util.Map">
+		update PIPELINING_INFO
+		set pip_name = #{pip_name,jdbcType=VARCHAR},create_time = #{pip_create_time,jdbcType=VARCHAR},create_user = #{pip_create_user,jdbcType=VARCHAR},
+		 execution_mode = #{executionMode,jdbcType=VARCHAR},timed_cron = #{cron,jdbcType=VARCHAR}, mail_address = #{email,jdbcType=VARCHAR}
+		 where  id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 修改代码仓库表 -->
+  <update id="updateCodeRep" parameterType="java.util.Map">
+		update CODE_REPOSITORIES
+		set rep_url = #{svn_url,jdbcType=VARCHAR},rep_account_number = #{svn_account,jdbcType=VARCHAR},rep_password = #{svn_password,jdbcType=VARCHAR}
+		 where  id = (select code_rep_id from task_build where id = 
+                (select task_id  from  pipelining_steps_task where pip_steps_id = 
+                        (select id from pipelining_steps where pip_id = #{id,jdbcType=VARCHAR} and pip_steps_name = 'step1')))
+  </update>
+  <!-- 修改构建任务表 -->
+  <update id="updateTaskBuild" parameterType="java.util.Map">
+		update TASK_BUILD
+		set real_build_name = #{build_name,jdbcType=VARCHAR},build_environment = #{build_environment,jdbcType=VARCHAR},
+		build_type = #{build_type,jdbcType=VARCHAR},create_user = #{pip_create_user,jdbcType=VARCHAR},create_time =  #{pip_create_time,jdbcType=VARCHAR}
+		 where  id = (select task_id  from  pipelining_steps_task where pip_steps_id = 
+                        (select id from pipelining_steps where pip_id = #{id,jdbcType=VARCHAR} and pip_steps_name = 'step1'))
+  </update>
+  <!-- 修改部署任务表 -->
+  <update id="updateTaskDeploy" parameterType="java.util.Map">
+		update TASK_DEPLOY
+		set real_deploy_name = #{deploy_name,jdbcType=VARCHAR},create_user = #{pip_create_user,jdbcType=VARCHAR},create_time = #{pip_create_time,jdbcType=VARCHAR},
+		build_mode = #{build_mode,jdbcType=VARCHAR}
+    where id = (select task_id  from  pipelining_steps_task where pip_steps_id = 
+                        (select id from pipelining_steps where pip_id = #{id,jdbcType=VARCHAR} and pip_steps_name = 'step2'))
+  </update>
+  <!-- 修改节点表信息  用户名 密码-->
+  <update id="updateNodeInfo2" parameterType="java.util.Map">
+		update node_info
+		set node_account_number = #{tomcat_account,jdbcType=VARCHAR},node_password = #{tomcat_password,jdbcType=VARCHAR}
+		 where  id = (select t.node_id from TASK_DEPLOY t where t.id = 
+                (select task_id  from  pipelining_steps_task where pip_steps_id = 
+                        (select id from pipelining_steps where pip_id = #{id,jdbcType=VARCHAR} and pip_steps_name = 'step2')))
+  </update>
+  <!-- 修改自动化测试表信息-->
+  <update id="updateTaskAutoInfo" parameterType="java.util.Map">
+		update task_auto_test
+		set autotest_id = #{automatedtaskId,jdbcType=VARCHAR},test_name = #{automatedtaskName,jdbcType=VARCHAR},
+		test_type = #{automatedtaskType,jdbcType=VARCHAR}
+   		 where id = (select task_id  from  pipelining_steps_task where pip_steps_id = 
+                        (select id from pipelining_steps where pip_id = #{id,jdbcType=VARCHAR} and pip_steps_name = 'step3'))
+		
+  </update>
+  	 <!-- 获取jenkins构建任务名 -->
+  <select id="queryJenkinsBuildName" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select t.build_name
+	  from task_build t
+	 where id = (select p.task_id
+	               from pipelining_task p
+	              where p.pip_id = #{id,jdbcType=VARCHAR}
+	                and p.task_type = '1')
+  </select>
+   <!-- 获取jenkins部署任务名 -->
+  <select id="queryJenkinsDeployName" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select t.deploy_name
+	  from task_deploy t
+	 where id = (select p.task_id
+	               from pipelining_task p
+	              where p.pip_id = #{id,jdbcType=VARCHAR}
+	                and p.task_type = '2')
+  </select>
+  <!-- 获取自动化测试任务id -->
+  <select id="queryTaskAutoId" parameterType="java.lang.String"
+	resultType="java.lang.String">
+	select task_id
+	  from pipelining_task p
+	 where p.pip_id = #{id,jdbcType=VARCHAR}
+	   and p.sort = '3'
+  </select>
+  <!-- mxx修改流水线信息 sql end -->
+  <!-- mxx删除流水线 sql start -->
+  <!-- 删除流水线表 -->
+  <delete id="deletePipelining_info" parameterType="java.lang.String">
+  	delete from pipelining_info where id = #{pipId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 删除流水线步骤表 -->
+  <delete id="deletePipelining_steps" parameterType="java.lang.String">
+  	delete from pipelining_steps where pip_id = #{pipId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 删除步骤任务关联表 -->
+  <delete id="deletePipelining_steps_task" parameterType="java.lang.String">
+  	delete  from pipelining_steps_task where pip_steps_id in 
+ 		(select id from pipelining_steps where pip_id = #{pipId,jdbcType=VARCHAR}) 
+  </delete>
+  <!-- 删除流水线任务关联表 -->
+  <delete id="deletePipelining_task" parameterType="java.lang.String">
+  	delete  from pipelining_task where pip_id = #{pipId,jdbcType=VARCHAR} 
+  </delete>
+  <!-- 删除流水线任务关联表中的一条 -->
+  <delete id="deletePipelining_task2" parameterType="java.util.Map">
+  	delete  from pipelining_task where pip_id = #{id,jdbcType=VARCHAR} and task_type = #{task_type,jdbcType=VARCHAR}
+  </delete>
+  <!-- 删除流水线历史表 -->
+  <delete id="deleteBuildHistory" parameterType="java.lang.String">
+  	delete  from build_history where pip_id = #{pipId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 删除构建任务表 -->
+  <delete id="deleteTask_build" parameterType="java.lang.String">
+  	delete from task_build
+ 		where id = (select p.task_id
+               from pipelining_task p
+              where p.pip_id = #{pipId,jdbcType=VARCHAR}
+                and p.task_type = '1') 
+  </delete>
+  <!-- 删除部署任务表 -->
+  <delete id="deleteTask_deploy" parameterType="java.lang.String">
+  	delete from task_deploy
+ 		where id = (select p.task_id
+                      from pipelining_task p
+                     where p.pip_id = #{pipId,jdbcType=VARCHAR}
+                       and p.task_type = '2') 
+  </delete>
+  <!-- 删除步骤表中的某个步骤 -->
+  <delete id="deletePipeliningSteps" parameterType="java.util.Map">
+  	delete from pipelining_steps where pip_id =  #{id,jdbcType=VARCHAR} and pip_steps_name = #{step,jdbcType=VARCHAR}
+  </delete>
+  <!-- 删除步骤任务关联表-->
+  <delete id="deletePipeliningStepsTask" parameterType="java.util.Map">
+  	delete from pipelining_steps_task where pip_steps_id = 
+  	(select id from pipelining_steps where pip_id =  #{id,jdbcType=VARCHAR} and pip_steps_name = #{step,jdbcType=VARCHAR})
+  </delete>
+  <!-- 删除节点表 -->
+  <delete id="deleteNode_info" parameterType="java.lang.String">
+  	delete from node_info
+ 		where id = (select node_id
+               from task_deploy
+              where id = (select task_id
+                            from pipelining_task p
+                           where p.pip_id = #{id, jdbcType = VARCHAR}
+                             and p.sort = '2'))
+  </delete>
+  <!-- 删除自动化测试表 -->
+  <delete id="deleteTaskAutoTest" parameterType="java.lang.String">
+  	delete from task_auto_test
+ 		where id = (select task_id
+               from pipelining_task p
+              where p.pip_id = #{id, jdbcType = VARCHAR}
+                and p.sort = '3')
+  </delete>
+  <!-- 删除代码仓库表 -->
+  <delete id="deletecode_repositories" parameterType="java.lang.String">
+  	delete from code_repositories
+ 		where id = (select code_rep_id
+               from task_build
+              where id = (select task_id
+                            from pipelining_task p
+                           where p.pip_id = #{id, jdbcType = VARCHAR}
+                             and p.sort = '1'))
+  </delete>
+   <!-- 根据流水线id查询所有节点唯一标识 -->
+  <select id="selectTaskId" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select n.app_id from node_info n where n.history_id in(   
+		select a.id from build_history a where a.pip_id = #{id,jdbcType=VARCHAR}
+                 and a.pip_steps_task_id is not null) 
+  </select>
+  <!-- 根据流水线id查询所有节点唯一标识 2-->
+  <select id="selectTaskId2" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select a.task_id, b.id
+	  from pipelining_task a, build_history b
+	 where a.id = b.pip_task_id
+	   and b.pip_id = #{id,jdbcType=VARCHAR}
+	   and b.pip_task_id is not null
+  </select>
+  <!-- mxx删除流水线 sql end -->
+   <!-- 获取流水线构建历史最大版本 -->
+  <select id="getMaxPipVersionByPipId" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select max(to_number(bh.pip_version)) as max_pip_version from build_history bh where
+	bh.pip_id = #{pipId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询流水线集合 -->
+  <select id="queryPipeliningList" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	select p.id,
+	p.pip_name,
+	p.create_time,
+	p.create_user,
+	p.project_id,
+	p.mail_address,
+	p.execution_mode,
+	p.timed_cron
+	from pipelining_info p where 1=1
+	<if test="projectId != null and projectId != ''">
+      and p.project_id = #{projectId,jdbcType=VARCHAR}
+    </if>
+    <if test="execution_mode != null and execution_mode != ''">
+      and p.execution_mode = #{execution_mode,jdbcType=VARCHAR}
+    </if>
+	order by p.create_time desc,p.project_id
+  </select>
+  
+  <!-- 通过流水线主键获取任务信息 -->
+  <select id="queryTaskListByPipId" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select p.id          as pip_id,
+         p.pip_name,
+         pst.id        as pst_id,
+         pst.task_id,
+         pst.task_type
+    from pipelining_steps_task pst
+    left join pipelining_steps ps
+      on ps.id = pst.pip_steps_id
+    left join pipelining_info p
+      on ps.pip_id = p.id
+   where p.id = #{pipId,jdbcType=VARCHAR}
+   order by ps.pip_steps_sort, pst.sort
+	
+	<!-- select p.id as pip_id,
+	   pst.task_type,
+       p.pip_name,
+       pst.id as pst_id,
+       case
+         when pst.task_type = '1' then
+          tb.id
+         when pst.task_type = '2' then
+          td.id
+         when pst.task_type = '3' then
+          tat.id
+         else
+          null
+       end as task_id,
+       case
+         when pst.task_type = '1' then
+          '构建'
+         when pst.task_type = '2' then
+          '部署'
+         when pst.task_type = '3' then
+          '自动化测试'
+         else
+          null
+       end as task_type_name,
+       case
+         when pst.task_type = '1' then
+          tb.build_name
+         when pst.task_type = '2' then
+          td.deploy_name
+         when pst.task_type = '3' then
+          tat.test_name
+         else
+          null
+       end as task_name
+  from pipelining_info p
+  left join pipelining_steps ps
+    on p.id = ps.pip_id
+  left join pipelining_steps_task pst
+    on ps.id = pst.pip_steps_id
+  left join task_build tb
+    on pst.task_id = tb.id
+   and pst.task_type = '1'
+  left join task_deploy td
+    on pst.task_id = td.id
+   and pst.task_type = '2'
+  left join task_auto_test tat
+    on pst.task_id = tat.id
+   and pst.task_type = '3'
+   where p.id = #{pipId,jdbcType=VARCHAR}
+   order by ps.pip_steps_sort,pst.sort -->
+  </select>
+  <!-- 查询一条流水线某一版本下真实历史 -->
+  <select id="queryRealHistoryByVersion" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	select p.id                as pip_id,
+       p.pip_name,
+       pst.id              as pst_id,
+       pst.task_id,
+       pst.task_type,
+       bh.pip_version,
+       bh.build_start_time,
+       bh.build_end_time,
+       bh.build_status,
+       bh.build_total_time,
+       bh.task_version,
+       bh.apply_url,
+       ni.node_ip,
+       ni.node_port
+  from build_history bh
+  left join pipelining_steps_task pst
+    on bh.pip_steps_task_id = pst.id
+  left join pipelining_steps ps
+    on ps.id = pst.pip_steps_id
+  left join pipelining_info p
+    on ps.pip_id = p.id
+  left join node_info ni
+    on ni.history_id = bh.id
+ where p.id = #{pipId,jdbcType=VARCHAR}
+   and bh.pip_version = #{pip_version,jdbcType=VARCHAR}
+ order by ps.pip_steps_sort, pst.sort
+	
+  </select>
+  <!-- 查询一条流水线某一版本下历史（以最后一次流水线包含任务为准，历史中没有执行也会补全） -->
+  <select id="queryBuildHistoryByVersion" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	select p.id          as pip_id,
+       p.pip_name,
+       pst.id        as pst_id,
+       pst.task_id,
+       pst.task_type,
+       bh.pip_version,
+       bh.build_start_time,
+       bh.build_end_time,
+       bh.build_status,
+       bh.build_total_time,
+       bh.task_version,
+       bh.apply_url,
+       ni.node_ip,
+       ni.node_port
+  from pipelining_steps_task pst
+    left join pipelining_steps ps
+      on ps.id = pst.pip_steps_id
+    left join pipelining_info p
+      on ps.pip_id = p.id
+  left join build_history bh
+    on bh.pip_steps_task_id = pst.id
+   and bh.pip_version = #{pip_version,jdbcType=VARCHAR}
+   left join node_info ni
+   on ni.history_id = bh.id
+ where p.id = #{pipId,jdbcType=VARCHAR}
+ order by ps.pip_steps_sort, pst.sort
+	
+	
+	<!-- select pst.id as pst_id,
+       pst.task_type,
+       bh.build_start_time,
+       bh.build_status,
+       bh.build_total_time,
+       bh.pip_version,
+       bh.task_version,
+       bh.apply_url,
+       case
+         when pst.task_type = '1' then
+          tb.id
+         when pst.task_type = '2' then
+          td.id
+         when pst.task_type = '3' then
+          tat.id
+         else
+          null
+       end as task_id,
+       case
+         when pst.task_type = '1' then
+          '构建'
+         when pst.task_type = '2' then
+          '部署'
+         when pst.task_type = '3' then
+          '自动化测试'
+         else
+          null
+       end as task_type_name,
+       case
+         when pst.task_type = '1' then
+          tb.build_name
+         when pst.task_type = '2' then
+          td.deploy_name
+         when pst.task_type = '3' then
+          tat.test_name
+         else
+          null
+       end as task_name
+  from pipelining_info p
+  left join pipelining_steps ps
+    on p.id = ps.pip_id
+  left join pipelining_steps_task pst
+    on ps.id = pst.pip_steps_id
+  left join task_build tb
+    on pst.task_id = tb.id
+   and pst.task_type = '1'
+  left join task_deploy td
+    on pst.task_id = td.id
+   and pst.task_type = '2'
+  left join task_auto_test tat
+    on pst.task_id = tat.id
+   and pst.task_type = '3'
+  left join build_history bh
+    on bh.pip_steps_task_id = pst.id
+   and bh.pip_version = #{pip_version,jdbcType=VARCHAR}
+ where p.id = #{pipId,jdbcType=VARCHAR}
+ order by ps.pip_steps_sort, pst.sort -->
+  </select>
+  
+  <!-- 查询指定版本下流水线信息 -->
+  <select id="queryPipVersionInfo" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	select bh.pip_id,
+        bh.build_start_time,
+        bh.build_end_time,
+        bh.build_total_time
+   from build_history bh
+  where bh.pip_id = #{pipId,jdbcType=VARCHAR}
+    and bh.pip_version = #{pip_version,jdbcType=VARCHAR}
+    and bh.pip_steps_task_id is null
+  </select>
+  <!-- 查询流水线所有的执行历史版本 -->
+  <select id="queryPipVersionList" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select bh.pip_version,
+       bh.build_start_time,
+       bh.build_end_time,
+       bh.build_total_time,
+       p.mail_address
+	  from build_history bh
+	  left join pipelining_info p on p.id = bh.pip_id
+	 where bh.pip_id = #{pipId,jdbcType=VARCHAR}
+	   and bh.pip_steps_task_id is null
+	 group by bh.pip_version,
+	          build_start_time,
+	          build_end_time,
+	          build_total_time,mail_address
+	 order by bh.pip_version desc
+	
+  	<!-- select bh.pip_version
+	   from build_history bh
+	  where bh.pip_id = #{pipId,jdbcType=VARCHAR}
+	  group by bh.pip_version
+	  order by bh.pip_version desc -->
+  </select>
+  <!-- 通过主键查询一条流水线信息 -->
+  <select id="selectOnePipByPipId" parameterType="java.lang.String"
+	resultType="java.util.Map">
+	select
+	p.id,p.pip_name,p.project_id,p.execution_mode,p.timed_cron,p.mail_address,p.create_time,p.create_user
+	from pipelining_info p
+	where p.id = #{pipId,jdbcType=VARCHAR}
+  </select>
+  <!-- 通过主键修改流水线的执行方式（1表示手动执行，2表示定时执行） -->
+  <update id="updateExecutionModeById" parameterType="java.util.Map">
+	update pipelining_info p set p.execution_mode = #{executionMode,jdbcType=VARCHAR}
+	where p.id = #{pipId,jdbcType=VARCHAR}
+</update>
+</mapper>

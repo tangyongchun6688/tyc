@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.control.deployManage.dao.DeployMapper">
+<cache/>
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.control.deployManage.entity.Deploy">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="DEPLOY_NAME" jdbcType="VARCHAR" property="deployName" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="MOULD_ID" jdbcType="VARCHAR" property="mouldId" />
+    <result column="NODE_ID" jdbcType="VARCHAR" property="nodeId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, DEPLOY_NAME, CREATE_USER, CREATE_TIME, MOULD_ID, NODE_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_DEPLOY
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TASK_DEPLOY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.control.deployManage.entity.Deploy">
+    insert into TASK_DEPLOY (ID, DEPLOY_NAME, CREATE_USER, 
+      CREATE_TIME, MOULD_ID, NODE_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{deployName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR}, #{mouldId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.control.deployManage.entity.Deploy">
+    insert into TASK_DEPLOY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="deployName != null">
+        DEPLOY_NAME,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="mouldId != null">
+        MOULD_ID,
+      </if>
+      <if test="nodeId != null">
+        NODE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="deployName != null">
+        #{deployName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="mouldId != null">
+        #{mouldId,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.control.deployManage.entity.Deploy">
+    update TASK_DEPLOY
+    <set>
+      <if test="deployName != null">
+        DEPLOY_NAME = #{deployName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="mouldId != null">
+        MOULD_ID = #{mouldId,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        NODE_ID = #{nodeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.control.deployManage.entity.Deploy">
+    update TASK_DEPLOY
+    set DEPLOY_NAME = #{deployName,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      MOULD_ID = #{mouldId,jdbcType=VARCHAR},
+      NODE_ID = #{nodeId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+	<!-- 查询部署列表信息 -->
+	<select id="getDeployList" parameterType="java.util.Map" resultType="java.util.Map">
+		select d.id,d.deploy_name,d.create_user,d.create_time,d.mould_id,d.node_id
+		from task_deploy d order by d.create_time desc
+	</select>
+
+	<!-- 根据步部署ID查询部署所需要的节点 -->
+	<select id="getNodeInfo" parameterType="java.util.Map" resultType="java.util.Map" useCache="false" flushCache="true">
+		select n.node_ip,n.node_port
+		from node_info n where n.history_id=#{jobHistoryId}
+	</select>
+
+	<!-- 根据部署ID查询构建job的名称 -->
+	<select id="getBuildByJobName" parameterType="java.util.Map" resultType="java.util.Map">
+		select b.build_name from task_deploy d,task_build b where
+		d.build_id=b.id and d.id=#{taskId}
+	</select>
+	<!-- 通过主键获取部署信息 -->
+	<select id="getDeployById" parameterType="java.lang.String" resultType="java.util.Map">
+	select td.deploy_name,
+       td.mould_id,
+       td.node_id,
+       td.real_deploy_name,
+       td.build_id
+  from task_deploy td
+ where td.id = #{deployId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据部署ID查询构建job的名称 -->
+	<select id="getBuildTaskByJobName" parameterType="java.lang.String" resultType="java.util.Map">
+		select b.build_name from task_deploy d,task_build b where
+		d.build_id=b.id and d.id=#{taskId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据步部署ID查询部署所需要的节点 -->
+	<select id="getNodeByIpAndPort" parameterType="java.lang.String" resultType="java.util.Map" useCache="false" flushCache="true">
+		select n.node_ip,n.node_port
+		from node_info n where n.history_id=#{childBuildHistoryId,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

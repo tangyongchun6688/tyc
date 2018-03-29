@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.control.buildManage.dao.BuildMapper">
+  <cache/>
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.control.buildManage.entity.Build">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="BUILD_NAME" jdbcType="VARCHAR" property="buildName" />
+    <result column="BUILD_ENVIRONMENT" jdbcType="VARCHAR" property="buildEnvironment" />
+    <result column="BUILD_TYPE" jdbcType="VARCHAR" property="buildType" />
+    <result column="CODE_REP_ID" jdbcType="VARCHAR" property="codeRepId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, BUILD_NAME, BUILD_ENVIRONMENT, BUILD_TYPE, CODE_REP_ID, CREATE_USER, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_BUILD
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TASK_BUILD
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.control.buildManage.entity.Build">
+    insert into TASK_BUILD (ID, BUILD_NAME, BUILD_ENVIRONMENT, 
+      BUILD_TYPE, CODE_REP_ID, CREATE_USER, 
+      CREATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{buildName,jdbcType=VARCHAR}, #{buildEnvironment,jdbcType=VARCHAR}, 
+      #{buildType,jdbcType=VARCHAR}, #{codeRepId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.control.buildManage.entity.Build">
+    insert into TASK_BUILD
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="buildName != null">
+        BUILD_NAME,
+      </if>
+      <if test="buildEnvironment != null">
+        BUILD_ENVIRONMENT,
+      </if>
+      <if test="buildType != null">
+        BUILD_TYPE,
+      </if>
+      <if test="codeRepId != null">
+        CODE_REP_ID,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="buildName != null">
+        #{buildName,jdbcType=VARCHAR},
+      </if>
+      <if test="buildEnvironment != null">
+        #{buildEnvironment,jdbcType=VARCHAR},
+      </if>
+      <if test="buildType != null">
+        #{buildType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeRepId != null">
+        #{codeRepId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.control.buildManage.entity.Build">
+    update TASK_BUILD
+    <set>
+      <if test="buildName != null">
+        BUILD_NAME = #{buildName,jdbcType=VARCHAR},
+      </if>
+      <if test="buildEnvironment != null">
+        BUILD_ENVIRONMENT = #{buildEnvironment,jdbcType=VARCHAR},
+      </if>
+      <if test="buildType != null">
+        BUILD_TYPE = #{buildType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeRepId != null">
+        CODE_REP_ID = #{codeRepId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.control.buildManage.entity.Build">
+    update TASK_BUILD
+    set BUILD_NAME = #{buildName,jdbcType=VARCHAR},
+      BUILD_ENVIRONMENT = #{buildEnvironment,jdbcType=VARCHAR},
+      BUILD_TYPE = #{buildType,jdbcType=VARCHAR},
+      CODE_REP_ID = #{codeRepId,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+<!-- 查询所有数据 -->
+ <select id="selectPro"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_BUILD order by CREATE_TIME desc
+  </select>
+<!-- 通过主键获取构建信息 -->
+<select id="getBuildById" resultType="java.util.Map"
+	parameterType="java.lang.String">
+	select tb.build_name,
+	tb.build_environment,
+	tb.build_type,
+	tb.real_build_name
+	from task_build tb
+	where tb.id = #{buildId,jdbcType=VARCHAR}
+</select>
+</mapper>

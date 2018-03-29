@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.control.codeManage.dao.CodeRepositoriesMapper">
+  <cache/>
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.control.codeManage.entity.CodeRepositories">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="REP_NAME" jdbcType="VARCHAR" property="repName" />
+    <result column="REP_DESCRIBE" jdbcType="VARCHAR" property="repDescribe" />
+    <result column="REP_URL" jdbcType="VARCHAR" property="repUrl" />
+    <result column="REP_VERSION" jdbcType="VARCHAR" property="repVersion" />
+    <result column="REP_ACCOUNT_NUMBER" jdbcType="VARCHAR" property="repAccountNumber" />
+    <result column="REP_PASSWORD" jdbcType="VARCHAR" property="repPassword" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, REP_NAME, REP_DESCRIBE, REP_URL, REP_VERSION, REP_ACCOUNT_NUMBER, REP_PASSWORD
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from CODE_REPOSITORIES
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CODE_REPOSITORIES
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.control.codeManage.entity.CodeRepositories">
+    insert into CODE_REPOSITORIES (ID, REP_NAME, REP_DESCRIBE, 
+      REP_URL, REP_VERSION, REP_ACCOUNT_NUMBER, 
+      REP_PASSWORD)
+    values (#{id,jdbcType=VARCHAR}, #{repName,jdbcType=VARCHAR}, #{repDescribe,jdbcType=VARCHAR}, 
+      #{repUrl,jdbcType=VARCHAR}, #{repVersion,jdbcType=VARCHAR}, #{repAccountNumber,jdbcType=VARCHAR}, 
+      #{repPassword,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.control.codeManage.entity.CodeRepositories">
+    insert into CODE_REPOSITORIES
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="repName != null">
+        REP_NAME,
+      </if>
+      <if test="repDescribe != null">
+        REP_DESCRIBE,
+      </if>
+      <if test="repUrl != null">
+        REP_URL,
+      </if>
+      <if test="repVersion != null">
+        REP_VERSION,
+      </if>
+      <if test="repAccountNumber != null">
+        REP_ACCOUNT_NUMBER,
+      </if>
+      <if test="repPassword != null">
+        REP_PASSWORD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="repName != null">
+        #{repName,jdbcType=VARCHAR},
+      </if>
+      <if test="repDescribe != null">
+        #{repDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="repUrl != null">
+        #{repUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="repVersion != null">
+        #{repVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="repAccountNumber != null">
+        #{repAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="repPassword != null">
+        #{repPassword,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.control.codeManage.entity.CodeRepositories">
+    update CODE_REPOSITORIES
+    <set>
+      <if test="repName != null">
+        REP_NAME = #{repName,jdbcType=VARCHAR},
+      </if>
+      <if test="repDescribe != null">
+        REP_DESCRIBE = #{repDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="repUrl != null">
+        REP_URL = #{repUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="repVersion != null">
+        REP_VERSION = #{repVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="repAccountNumber != null">
+        REP_ACCOUNT_NUMBER = #{repAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="repPassword != null">
+        REP_PASSWORD = #{repPassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.control.codeManage.entity.CodeRepositories">
+    update CODE_REPOSITORIES
+    set REP_NAME = #{repName,jdbcType=VARCHAR},
+      REP_DESCRIBE = #{repDescribe,jdbcType=VARCHAR},
+      REP_URL = #{repUrl,jdbcType=VARCHAR},
+      REP_VERSION = #{repVersion,jdbcType=VARCHAR},
+      REP_ACCOUNT_NUMBER = #{repAccountNumber,jdbcType=VARCHAR},
+      REP_PASSWORD = #{repPassword,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询所有代码仓库 -->
+  <select id="queryCodeBaseList" resultType="java.util.Map">
+    select * from CODE_REPOSITORIES
+     
+  </select>
+</mapper>

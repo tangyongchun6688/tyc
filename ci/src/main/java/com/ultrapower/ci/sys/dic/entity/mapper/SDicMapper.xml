@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ultrapower.ci.sys.dic.dao.SDicMapper">
+  <resultMap id="BaseResultMap" type="com.ultrapower.ci.sys.dic.entity.SDic">
+    <id column="DIC_ID" jdbcType="VARCHAR" property="dicId" />
+    <result column="DIC_CODE" jdbcType="VARCHAR" property="dicCode" />
+    <result column="DIC_NAME" jdbcType="VARCHAR" property="dicName" />
+    <result column="DIC_ICON" jdbcType="VARCHAR" property="dicIcon" />
+    <result column="DIC_SORT" jdbcType="VARCHAR" property="dicSort" />
+    <result column="PARENT_DIC_ID" jdbcType="VARCHAR" property="parentDicId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    DIC_ID, DIC_CODE, DIC_NAME, DIC_ICON, DIC_SORT, PARENT_DIC_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from S_DIC
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from S_DIC
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    insert into S_DIC (DIC_ID, DIC_CODE, DIC_NAME, 
+      DIC_ICON, DIC_SORT
+      )
+    values (#{dicId,jdbcType=VARCHAR}, #{dicCode,jdbcType=VARCHAR}, #{dicName,jdbcType=VARCHAR}, 
+      #{dicIcon,jdbcType=VARCHAR}, #{dicSort,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    insert into S_DIC
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dicId != null">
+        DIC_ID,
+      </if>
+      <if test="dicCode != null">
+        DIC_CODE,
+      </if>
+      <if test="dicName != null">
+        DIC_NAME,
+      </if>
+      <if test="dicIcon != null">
+        DIC_ICON,
+      </if>
+      <if test="dicSort != null">
+        DIC_SORT,
+      </if>
+      <if test="parentDicId != null">
+        PARENT_DIC_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dicId != null">
+        #{dicId,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null">
+        #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicName != null">
+        #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicIcon != null">
+        #{dicIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="dicSort != null">
+        #{dicSort,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDicId != null">
+        #{parentDicId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    update S_DIC
+    <set>
+      <if test="dicCode != null">
+        DIC_CODE = #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicName != null">
+        DIC_NAME = #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicIcon != null">
+        DIC_ICON = #{dicIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="dicSort != null">
+        DIC_SORT = #{dicSort,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDicId != null">
+        PARENT_DIC_ID = #{parentDicId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    update S_DIC
+    set DIC_CODE = #{dicCode,jdbcType=VARCHAR},
+      DIC_NAME = #{dicName,jdbcType=VARCHAR},
+      DIC_ICON = #{dicIcon,jdbcType=VARCHAR},
+      DIC_SORT = #{dicSort,jdbcType=VARCHAR},
+      PARENT_DIC_ID = #{parentDicId,jdbcType=VARCHAR}
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </update>
+  
+  
+  
+  <!-- 查询所有构建环境 -->
+  <select id="queryDicItemList" resultMap="BaseResultMap">
+    select * from S_DIC s where s.PARENT_DIC_ID is null  order by dic_sort
+  <!-- 根据构建环境查询对应构建类型 -->
+  </select>
+   <select id="querySonDicItemList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from S_DIC s where s.PARENT_DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 增加构建环境 -->
+  <insert id="addConsEnvironment" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    insert into S_DIC (DIC_ID, DIC_CODE, DIC_NAME, DIC_SORT,DIC_ICON)values (#{dicId,jdbcType=VARCHAR}, #{dicCode,jdbcType=VARCHAR}, #{dicName,jdbcType=VARCHAR}, #{dicSort,jdbcType=VARCHAR},#{dicIcon,jdbcType=VARCHAR})
+  </insert>
+  
+ <!-- 根据id删除构建环境 -->
+ <delete id="delConsEnvironment" parameterType="java.lang.String">
+    delete from S_DIC
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+ </delete>
+
+ <!-- 根据构建环境id查询构建类型 -->
+   <select id="querySonDicItemListZ" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from S_DIC s where s.PARENT_DIC_ID = #{id,jdbcType=VARCHAR}
+ </select>
+ 
+ <!--  删除构建类型 -->
+  <delete id="delConsType" parameterType="java.lang.String">
+    delete from S_DIC
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+ </delete>
+ 
+ <!-- 根据id查询构建环境 -->
+  <select id="getConsEnvironment" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from S_DIC s where s.DIC_ID = #{dicId,jdbcType=VARCHAR}
+ </select>
+ <!-- 修改构建环境-->
+ <update id="updateConsEnvironment" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    update S_DIC
+    set DIC_NAME = #{dicName,jdbcType=VARCHAR},DIC_ICON = #{dicIcon,jdbcType=VARCHAR},DIC_SORT = #{dicSort,jdbcType=VARCHAR},DIC_CODE = #{dicCode,jdbcType=VARCHAR} where DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </update>
+ <!-- 增加构建类型-->
+ <insert id="addConsType" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    insert into S_DIC (DIC_ID, DIC_CODE, DIC_NAME, DIC_SORT,DIC_ICON,PARENT_DIC_ID)values (#{dicId,jdbcType=VARCHAR}, #{dicCode,jdbcType=VARCHAR}, #{dicName,jdbcType=VARCHAR}, #{dicSort,jdbcType=VARCHAR},#{dicIcon,jdbcType=VARCHAR},#{parentDicId,jdbcType=VARCHAR})
+  </insert>
+ <!-- 修改构建类型-->
+  <update id="updateConsType" parameterType="com.ultrapower.ci.sys.dic.entity.SDic">
+    update S_DIC
+    set DIC_CODE = #{dicCode,jdbcType=VARCHAR},
+      DIC_NAME = #{dicName,jdbcType=VARCHAR},
+      DIC_ICON = #{dicIcon,jdbcType=VARCHAR},
+      DIC_SORT = #{dicSort,jdbcType=VARCHAR}
+    where DIC_ID = #{dicId,jdbcType=VARCHAR}
+  </update>
+ <!-- 验证编码类型 -->
+ <select id="validateDicCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from S_DIC where DIC_CODE = #{dicCode,jdbcType=VARCHAR}
+ </select>
+</mapper>

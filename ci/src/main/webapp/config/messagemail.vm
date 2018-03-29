@@ -1,0 +1,53 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<title>邮件发送</title>
+<style>
+	body{
+		font-size:12px;
+		margin:0;
+		padding:0;
+		font-family:SimSun;	}
+	.list{
+		color:#545454;
+		text-decoration:none;
+		}
+	.list:hover{
+		text-decoration:none;
+		color:#2953a5;
+		}
+</style>
+</head> 
+<body style = 'font-size:12px;margin:0;padding:0;font-family:SimSun;' >
+	<center>
+		<table cellpadding='0' cellspacing='0' border='0'  bgcolor='#ffffff' style='margin:0 auto;width:800px;'>
+			<tr>
+				<td style='color:#545454;padding:0 0 8px 0;font-size:12px;font-family:SimSun;' valign='bottom' align='right'>
+					该邮件来自CI系统 取消邮件提醒请点此
+					<a href='$mailout' target='_blank'>退订</a>
+				</td>
+			</tr>
+		</table>
+		<table  width='800' cellpadding='0' cellspacing='10' border='0' bgcolor='#ffffff' style=' border:1px solid #e5e5e5; margin:0 auto;'>
+			$pipContents
+		</table>
+		<table  width='800' cellpadding='0' cellspacing='10' border='0' bgcolor='#ffffff' style=' border:1px solid #e5e5e5; margin:0 auto;'>
+			$buildContents
+		</table>
+		<table  width='800' cellpadding='0' cellspacing='10' border='0' bgcolor='#ffffff' style=' border:1px solid #e5e5e5; margin:0 auto;'>
+			$deployContents
+		</table>
+		<table  width='800' cellpadding='0' cellspacing='10' border='0' bgcolor='#ffffff' style=' border:1px solid #e5e5e5; margin:0 auto;'>
+			$autoTestContents
+		</table>
+		<table cellpadding='0' cellspacing='' border='0'  style=' width:800px; margin:0 auto;'>
+			<tr>
+				<td style='color:#545454;padding:10px 0;font-size:12px;font-family:SimSun;' valign='bottom' align='right'>
+					此邮件为系统邮件，
+					<span style='color:#bd0102'>请勿回复</span>
+				</td>
+			</tr>
+		</table>
+	</center>
+</body>
+</html>
